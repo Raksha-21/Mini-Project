@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import SelectRole from "./pages/SelectRole";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import MyCrops from "@/pages/dashboard/MyCrops";
+
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
             <Route path="/" element={<Login />} />
             <Route path="/select-role" element={<SelectRole />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/crops" element={<MyCrops />} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
