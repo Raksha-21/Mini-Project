@@ -9,6 +9,7 @@ import SelectRole from "./pages/SelectRole";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import MyCrops from "@/pages/dashboard/MyCrops";
+import DiseaseDetection from "@/pages/dashboard/DiseaseDetection"; // or "@/pages/farmer/DiseaseDetection"
 
 
 const queryClient = new QueryClient();
@@ -24,6 +25,9 @@ const App = () => (
             <Route path="/select-role" element={<SelectRole />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard/crops" element={<MyCrops />} />
+            <Route path="/farmer" element={<DiseaseDetection />} />
+            <Route path="/farmer/disease-detection" element={<DiseaseDetection />} /> 
+            
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
