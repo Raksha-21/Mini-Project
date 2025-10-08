@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { title: getTranslation('weatherSoil', language), icon: Cloud, path: '/dashboard/weather' },
     { title: getTranslation('aiRoadmap', language), icon: Map, path: '/dashboard/roadmap' },
     { title: getTranslation('Schemes', language), icon: FileText, path: '/dashboard/Schemes' },
-    { title: getTranslation('Disease detection', language), icon: MessageSquare, path: '/dashboard/chatbot' },
+    { title: getTranslation('Disease detection', language), icon: MessageSquare, path: '/dashboard/Diseasepage' },
   ];
 
   const professionalGardenerMenuItems = [

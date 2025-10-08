@@ -1,106 +1,91 @@
-import DashboardLayout from "@/components/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
-
-const plantHealthData = [
-  { name: "Healthy", value: 60 },
-  { name: "Needs Attention", value: 25 },
-  { name: "Diseased", value: 15 },
-];
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { getTranslation } from "@/lib/translations";
 
 const COLORS = ["#4ade80", "#facc15", "#f87171"];
 
-const growthStages = [
-  { stage: "Seed", status: 1 },
-  { stage: "Germination", status: 1 },
-  { stage: "Vegetative", status: 2 },
-  { stage: "Flower/Fruit", status: 3 },
-  { stage: "Harvest", status: 3 },
+const plantHealthData = [
+  { name: "Healthy", value: 70 },
+  { name: "Needs Attention", value: 20 },
+  { name: "Diseased", value: 10 },
 ];
 
-const taskProgress = [
-  { task: "Watering", done: 4, pending: 1 },
-  { task: "Fertilizing", done: 2, pending: 2 },
-  { task: "Pest Check", done: 1, pending: 3 },
+const roadmapSteps = [
+  { step: 1, title: "Enter Region & Soil Info" },
+  { step: 2, title: "Get Crop Recommendations" },
+  { step: 3, title: "Fertilization & Watering Schedule" },
+  { step: 4, title: "Monitor Plant Health" },
+  { step: 5, title: "Disease Alerts & Treatment" },
 ];
 
-export default function AIRoadmapFarmers() {
+export default function AIRoadmap() {
+  const navigate = useNavigate();
+  const { language } = useAuth();
+
+  useEffect(() => {
+    const handlePopState = () => {
+      navigate("/dashboard", { replace: true });
+    };
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [navigate]);
+
   return (
-    <DashboardLayout>
-      <div className="space-y-6 max-w-5xl mx-auto">
-        <h1 className="text-2xl font-bold text-green-800">🌾 AI Roadmap for Farmers</h1>
-
-        {/* Crop Health Pie Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Crop Health Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={plantHealthData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  label
-                >
-                  {plantHealthData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Crop Growth Timeline */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Growth Stages</CardTitle>
-          </CardHeader>
-          <CardContent className="flex space-x-4 justify-between">
-            {growthStages.map((stage, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold ${
-                    stage.status === 1
-                      ? "bg-green-600"
-                      : stage.status === 2
-                      ? "bg-yellow-500"
-                      : "bg-gray-400"
-                  }`}
-                >
-                  {stage.stage[0]}
-                </div>
-                <span className="text-sm mt-2">{stage.stage}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Task Progress Bar Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Task Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={taskProgress} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="task" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="done" stackId="a" fill="#4ade80" />
-                <Bar dataKey="pending" stackId="a" fill="#f87171" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+    <div className="min-h-screen p-6 bg-gray-50 flex flex-col items-center">
+      <div className="w-full max-w-5xl mb-4">
+        <Button
+          onClick={() => navigate("/dashboard", { replace: true })}
+          className="bg-gray-800 text-white hover:bg-gray-900"
+        >
+          ← {getTranslation("Back", language)}
+        </Button>
       </div>
-    </DashboardLayout>
+
+      <h1 className="text-2xl font-bold text-green-800 mb-6">
+        🌿 {getTranslation("AIRoadmap", language)}
+      </h1>
+
+      {/* Roadmap Steps */}
+      <div className="w-full max-w-5xl mb-6 flex flex-col space-y-4">
+        {roadmapSteps.map((step) => (
+          <div
+            key={step.step}
+            className="flex items-center p-4 bg-white rounded-2xl shadow hover:shadow-lg transition"
+          >
+            <div className="w-10 h-10 rounded-full bg-green-700 text-white flex items-center justify-center font-bold mr-4">
+              {step.step}
+            </div>
+            <div className="text-lg font-semibold">{step.title}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Plant Health Pie Chart */}
+      <div className="w-full max-w-5xl mb-6 bg-white p-4 rounded-2xl shadow">
+        <h2 className="font-semibold mb-3">{getTranslation("plantHealthOverview", language)}</h2>
+        <ResponsiveContainer width="100%" height={250}>
+          <PieChart>
+            <Pie
+              data={plantHealthData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label
+            >
+              {plantHealthData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
