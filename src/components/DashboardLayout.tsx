@@ -53,6 +53,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { title: 'History', icon: History, path: '/dashboard/history' },
     { title: getTranslation('weatherSoil', language), icon: Cloud, path: '/dashboard/weather' },
     { title: getTranslation('aiRoadmap', language), icon: Map, path: '/dashboard/roadmap' },
+    { title: getTranslation('Schemes', language), icon: FileText, path: '/dashboard/Schemes' },
     { title: getTranslation('Disease detection', language), icon: MessageSquare, path: '/dashboard/chatbot' },
   ];
 
@@ -68,7 +69,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { title: getTranslation('dashboard', language), icon: LayoutDashboard, path: '/dashboard' },
     { title: getTranslation('myPlants', language), icon: Flower2, path: '/dashboard/plants' },
     { title: getTranslation('detectDisease', language), icon: ScanSearch, path: '/dashboard/detect' },
-    { title: getTranslation('tips', language), icon: Lightbulb, path: '/dashboard/tips' },
     { title: getTranslation('reminders', language), icon: Bell, path: '/dashboard/reminders' },
     { title: getTranslation('calendar', language), icon: Calendar, path: '/dashboard/calendar' },
     

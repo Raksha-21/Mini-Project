@@ -14,7 +14,7 @@ const crops: Crop[] = [
     name: "Arecanut",
     description:
       "Arecanut, also known as betel nut, is a tropical crop mainly grown in coastal Karnataka. It thrives in humid conditions with well-drained soil.",
-    image: `${import.meta.env.BASE_URL}crops/arecanut.jpg`,
+    image: "public/crops/arecanut.jpg",
     soilType: "Laterite or red loamy soil",
     season: "June – December",
   },
@@ -22,7 +22,7 @@ const crops: Crop[] = [
     name: "Pepper",
     description:
       "Black pepper is a popular spice crop that prefers partial shade and humid tropical climate. It’s often intercropped with arecanut or coconut.",
-    image: `${import.meta.env.BASE_URL}crops/pepper.jpg`,
+    image: "public/crops/pepper.jpg",
     soilType: "Fertile, well-drained loamy soil",
     season: "June – February",
   },
