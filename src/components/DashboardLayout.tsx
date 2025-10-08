@@ -61,7 +61,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { title: getTranslation('plantInventory', language), icon: ClipboardList, path: '/dashboard/inventory' },
     { title: getTranslation('scanDetect', language), icon: ScanSearch, path: '/dashboard/scan' },
     { title: getTranslation('taskPlanner', language), icon: Calendar, path: '/dashboard/tasks' },
-    { title: getTranslation('aiAssistant', language), icon: Bot, path: '/dashboard/assistant' },
     { title: getTranslation('reports', language), icon: FileText, path: '/dashboard/reports' },
   ];
 
@@ -72,6 +71,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { title: getTranslation('tips', language), icon: Lightbulb, path: '/dashboard/tips' },
     { title: getTranslation('reminders', language), icon: Bell, path: '/dashboard/reminders' },
     { title: getTranslation('calendar', language), icon: Calendar, path: '/dashboard/calendar' },
+    
   ];
 
   const getMenuItems = () => {
