@@ -1,32 +1,42 @@
 import React, { useState, useRef } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import fieldBackground from "@/assets/background.png";
 
 const Diseasepage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [cropName, setCropName] = useState("");
   const [mode, setMode] = useState<"upload" | "live" | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const navigate = useNavigate();
 
-  // Start live camera
-  const startCamera = async () => {
-    setMode("live");
-    setSelectedImage(null);
-    if (videoRef.current && !videoRef.current.srcObject) {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        videoRef.current.srcObject = mediaStream;
-        videoRef.current.play();
-        setStream(mediaStream);
-      } catch (err) {
-        alert("Camera access denied. Please allow camera.");
-      }
+  const stopCamera = () => {
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
     }
   };
 
-  // Capture photo from camera
+  const startCamera = async () => {
+    stopCamera(); // Stop any existing camera
+    setSelectedImage(null);
+    setMode("live");
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Camera access denied. Please allow camera.");
+    }
+  };
+
   const capturePhoto = () => {
     if (!videoRef.current) return;
 
@@ -44,18 +54,6 @@ const Diseasepage: React.FC = () => {
     });
   };
 
-  // Stop live camera
-  const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const mediaStream = videoRef.current.srcObject as MediaStream;
-      mediaStream.getTracks().forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
-    }
-    setStream(null);
-    if (mode === "live") setMode("upload");
-  };
-
-  // Handle file upload
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -65,24 +63,11 @@ const Diseasepage: React.FC = () => {
     }
   };
 
-  // Placeholder for disease detection (replace with backend call)
-  const handleDetect = async () => {
+  const handleDetect = () => {
     if (!selectedImage || !cropName) return;
-    const formData = new FormData();
-    formData.append("image", selectedImage);
-    formData.append("crop_name", cropName);
-
-    try {
-      const res = await fetch("/api/detect-disease", { method: "POST", body: formData });
-      const data = await res.json();
-      alert(data.message || "Detection complete!");
-    } catch (err) {
-      console.error(err);
-      alert("Error detecting disease");
-    }
+    alert("Disease detection simulated!");
   };
 
-  // Reset everything
   const handleReset = () => {
     setSelectedImage(null);
     setCropName("");
@@ -91,95 +76,119 @@ const Diseasepage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-to-br from-green-100 via-emerald-100 to-green-50 p-6">
-        <div className="rounded-3xl shadow-2xl p-8 sm:p-10 w-full max-w-2xl bg-white border border-green-300 flex flex-col items-center space-y-6">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-green-800">
-            🌿 Disease Detection
-          </h2>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-8 relative"
+      style={{
+        backgroundImage: `url(${fieldBackground})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="absolute inset-0 bg-white/20 backdrop-blur-sm" />
 
-          {/* Options */}
-          {!selectedImage && (
-            <div className="flex flex-col sm:flex-row gap-4 w-full">
-              <Button
-                onClick={() => setMode("upload")}
-                className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-              >
-                Upload Image
-              </Button>
-              <Button
-                onClick={startCamera}
-                className="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white"
-              >
-                Live Capture
-              </Button>
-            </div>
-          )}
+      {/* Back Button */}
+      <Button
+        variant="outline"
+        className="absolute top-4 left-4 bg-white/70 hover:bg-white text-green-800 border-green-600 z-20"
+        onClick={() => navigate(-1)}
+      >
+        ← Back
+      </Button>
 
-          {/* Upload Box */}
-          {mode === "upload" && !selectedImage && (
-            <div className="border-2 border-dashed border-green-400 p-10 rounded-xl text-center cursor-pointer hover:border-emerald-600 bg-green-50 w-full relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              <p className="text-green-800 font-semibold text-lg">
-                Click here to upload an image
-              </p>
-            </div>
-          )}
+      {/* Disease Detection Box */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 50 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 w-full max-w-2xl bg-white/90 rounded-3xl shadow-lg p-8 flex flex-col items-center space-y-6"
+      >
+        <h2 className="text-3xl font-extrabold text-center text-green-800">
+          🌿 Disease Detection
+        </h2>
 
-          {/* Live Camera */}
-          {mode === "live" && !selectedImage && (
-            <div className="flex flex-col items-center w-full space-y-3">
-              <video
-                ref={videoRef}
-                className="w-full h-72 object-cover rounded-xl border border-green-400 shadow-md"
-                autoPlay
-                playsInline
-              />
+        {!selectedImage && !mode && (
+          <div className="flex flex-col sm:flex-row gap-4 w-full mt-6">
+            <Button
+              onClick={() => setMode("upload")}
+              className="flex-1 bg-green-700 hover:bg-green-800 text-white"
+            >
+              Upload Image
+            </Button>
+            <Button
+              onClick={startCamera}
+              className="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white"
+            >
+              Live Capture
+            </Button>
+          </div>
+        )}
+
+        {mode === "upload" && !selectedImage && (
+          <div className="border-2 border-dashed border-green-400 p-10 rounded-xl text-center cursor-pointer hover:border-emerald-600 bg-green-50 w-full mt-6 relative">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+            />
+            <p className="text-green-800 font-semibold text-lg">
+              Click here to upload an image
+            </p>
+          </div>
+        )}
+
+        {mode === "live" && !selectedImage && (
+          <div className="flex flex-col items-center w-full space-y-3 mt-6">
+            <video
+              ref={videoRef}
+              className="w-full h-72 object-cover rounded-xl border border-green-400 shadow-md"
+              autoPlay
+              playsInline
+            />
+            <div className="flex gap-3 w-full">
               <Button
                 onClick={capturePhoto}
-                className="w-full bg-green-700 hover:bg-green-800 text-white"
+                className="flex-1 bg-green-700 hover:bg-green-800 text-white"
               >
                 Capture Photo
               </Button>
+              <Button onClick={handleReset} variant="outline" className="flex-1">
+                Cancel
+              </Button>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Selected Image */}
-          {selectedImage && (
-            <div className="w-full flex flex-col items-center space-y-4">
-              <img
-                src={URL.createObjectURL(selectedImage)}
-                alt="Selected"
-                className="w-full h-72 object-cover rounded-xl shadow-md border border-green-400"
-              />
-              <Input
-                placeholder="Enter Crop Name"
-                value={cropName}
-                onChange={(e) => setCropName(e.target.value)}
-                className="mt-2 border-green-500 focus:border-emerald-600"
-              />
-              <div className="flex flex-col sm:flex-row gap-3 w-full mt-4">
-                <Button
-                  onClick={handleDetect}
-                  className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-                  disabled={!cropName}
-                >
-                  Detect Disease
-                </Button>
-                <Button onClick={handleReset} variant="outline" className="flex-1">
-                  Reset
-                </Button>
-              </div>
+        {selectedImage && (
+          <div className="w-full flex flex-col items-center space-y-4 mt-6">
+            <img
+              src={URL.createObjectURL(selectedImage)}
+              alt="Selected"
+              className="w-full h-72 object-cover rounded-xl shadow-md border border-green-400"
+            />
+            <Input
+              placeholder="Enter Crop Name"
+              value={cropName}
+              onChange={(e) => setCropName(e.target.value)}
+              className="border-green-500 focus:border-emerald-600"
+            />
+            <div className="flex flex-col sm:flex-row gap-3 w-full mt-4">
+              <Button
+                onClick={handleDetect}
+                className="flex-1 bg-green-700 hover:bg-green-800 text-white"
+                disabled={!cropName}
+              >
+                Detect Disease
+              </Button>
+              <Button onClick={handleReset} variant="outline" className="flex-1">
+                Reset
+              </Button>
             </div>
-          )}
-        </div>
-      </div>
-    </DashboardLayout>
+          </div>
+        )}
+      </motion.div>
+    </div>
   );
 };
 

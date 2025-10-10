@@ -6,6 +6,8 @@ import PMKisanImg from "@/assets/pmkisan.webp";
 import SoilHealthImg from "@/assets/soil_health.webp";
 import CropInsuranceImg from "@/assets/crop_insurance.webp";
 import LoanWaiverImg from "@/assets/loan_waiver.webp";
+import scheme from "@/assets/scheme.png"; 
+
 interface Scheme {
   title: string;
   description: string;
@@ -23,7 +25,7 @@ const schemes: Scheme[] = [
   {
     title: "PM-KISAN",
     description: "Income support scheme for farmers: ₹6,000/year directly to bank accounts.",
-    image:PMKisanImg,
+    image: PMKisanImg,
     url: "https://pmkisan.gov.in/",
   },
   {
@@ -41,7 +43,7 @@ const schemes: Scheme[] = [
   {
     title: "Agricultural Loan Waiver",
     description: "Waiver of agricultural loans for eligible small farmers in Karnataka.",
-    image:LoanWaiverImg,
+    image: LoanWaiverImg,
     url: "https://www.karnataka.gov.in/AgriLoanWaiver",
   },
 ];
@@ -50,44 +52,54 @@ export default function GovernmentSchemes() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
-      {/* Back Button */}
-      <div className="w-full max-w-6xl mb-4">
+    <div className="min-h-screen relative">
+      {/* Background Image */}
+      <img
+        src={scheme}
+        alt="background"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+
+      {/* Overlay */}
+      <div className="relative z-10 bg-black/20 min-h-screen flex flex-col items-center p-6">
+        {/* Back Button at Top Left */}
         <Button
           onClick={() => navigate("/dashboard")}
-          className="bg-gray-800 text-white hover:bg-gray-900"
+          className="fixed top-4 left-4 bg-gray-800 text-white hover:bg-gray-900 z-20"
         >
-          ← Back 
+          ← Back
         </Button>
-      </div>
 
-      <h1 className="text-2xl font-bold text-green-800 mb-6">🌿 Government Schemes for Farmers</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-green-100 mb-6 text-center mt-4">
+          🌿 Government Schemes for Farmers
+        </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full">
-        {schemes.map((scheme, idx) => (
-          <Card
-            key={idx}
-            className="flex flex-col justify-between hover:shadow-lg transition cursor-pointer h-full"
-          >
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">{scheme.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col flex-1">
-              <img
-                src={scheme.image}
-                alt={scheme.title}
-                className="w-full h-40 object-cover rounded-md mb-3"
-              />
-              <p className="text-sm text-muted-foreground flex-1">{scheme.description}</p>
-              <Button
-                onClick={() => window.open(scheme.url, "_blank")}
-                className="mt-3 bg-green-700 hover:bg-green-800 text-white w-full"
-              >
-                Learn More
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full mt-4">
+          {schemes.map((schemeItem, idx) => (
+            <Card
+              key={idx}
+              className="flex flex-col justify-between hover:shadow-lg transition cursor-pointer h-full"
+            >
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">{schemeItem.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col flex-1">
+                <img
+                  src={schemeItem.image}
+                  alt={schemeItem.title}
+                  className="w-full h-40 object-cover rounded-md mb-3"
+                />
+                <p className="text-sm text-muted-foreground flex-1">{schemeItem.description}</p>
+                <Button
+                  onClick={() => window.open(schemeItem.url, "_blank")}
+                  className="mt-3 bg-green-700 hover:bg-green-800 text-white w-full"
+                >
+                  Learn More
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

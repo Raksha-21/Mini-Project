@@ -19,7 +19,7 @@ import Tips from '@/pages/dashboard/Tips';
 import AIroadmap from '@/pages/dashboard/AIRoadmap';
 import Schemes from '@/pages/dashboard/Schemes';
 import Diseasepage from "@/pages/dashboard/Diseasepage";
-
+import DetectDisease from "@/pages/dashboard/DetectDisease";
 
 const queryClient = new QueryClient();
 
@@ -47,8 +47,7 @@ const App = () => (
             <Route path="/dashboard/roadmap" element={<AIroadmap />} />
             <Route path="/dashboard/Schemes" element={<Schemes/>}/>
            <Route path="/dashboard/diseasepage" element={<Diseasepage/>} />
-            <Route path="/dashboard/crops" element={<MyCrops />} />
-            
+            <Route path="/dashboard/detect-disease" element={<DetectDisease/>} />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
