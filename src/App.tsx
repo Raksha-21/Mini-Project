@@ -21,6 +21,7 @@ import Schemes from '@/pages/dashboard/Schemes';
 import Diseasepage from "@/pages/dashboard/Diseasepage";
 import DetectDisease from "@/pages/dashboard/DetectDisease";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (
